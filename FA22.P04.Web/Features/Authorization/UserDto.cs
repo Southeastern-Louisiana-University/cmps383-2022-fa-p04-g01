@@ -1,4 +1,4 @@
-namespace FA22.P04.Web.Features.Users;
+namespace FA22.P04.Web.Features.Authorization;
 
 public class UserDto
 {
