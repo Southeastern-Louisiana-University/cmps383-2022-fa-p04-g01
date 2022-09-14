@@ -1,8 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FA22.P04.Web.Features.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace FA22.P04.Web.Data;
 
-public class DataContext : DbContext
+public class DataContext : IdentityDbContext<User, Role, int, IdentityUserClaim<int>, UserRole, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>
 {
     public DataContext(DbContextOptions<DataContext> options) : base(options) {
     
@@ -12,30 +15,27 @@ public class DataContext : DbContext
 
     }
 
-    //DB Context Inheritance
-    public class  IdentityDbContext<User, Role, int, IdentityUserClaim<int>, UserRole,IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>
-
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         base.OnModelCreating(modelBuilder);
 
-        //Imported Code Segment
-        var userRoleBuilder = builder.Entity<UserRole>();
+        var userRoleBuilder = modelBuilder.Entity<UserRole>();
+
         userRoleBuilder.HasKey(x => new {x.UserId, x.RoleId});
         
-        userRoleBuilder.HasOne(/*navigation experession*/ x => x.Role);
-            .WithMany(/*navigation experession*/ x => x.Users);
-            .HasForeignKey(x => x.RoleID);
+        userRoleBuilder.HasOne(x => x.Role)
+            .WithMany(x => x.Users)
+            .HasForeignKey(x => x.RoleId);
 
-        userRoleBuilder.HasOne(/*navigation experession*/ x => x.User);
-            .WithMany(/*navigation experession*/ x => x.Roles);
+        userRoleBuilder.HasOne(x => x.User)
+            .WithMany(x => x.Roles)
             .HasForeignKey(x => x.UserId);
-        //End of Code Segment
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DataContext).Assembly);
     }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder) {
         base.ConfigureConventions(configurationBuilder);
+
         // this stores all decimal values to two decimal points by default - good enough for our purposes
         configurationBuilder.Properties<decimal>()
             .HavePrecision(18, 2);

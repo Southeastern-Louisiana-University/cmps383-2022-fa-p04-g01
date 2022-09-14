@@ -1,16 +1,19 @@
-﻿using FA22.P04.Web.Features.Products;
+﻿using FA22.P04.Web.Features.Authorization;
+using FA22.P04.Web.Features.Products;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace FA22.P04.Web.Data;
 
 public static class MigrateAndSeed
 {
-    public static void Initialize(IServiceProvider services)
+    public static async void Initialize(IServiceProvider services)
     {
         var context = services.GetRequiredService<DataContext>();
         context.Database.Migrate();
 
         AddProducts(context);
+
     }
 
     private static void AddProducts(DataContext context)
@@ -37,5 +40,15 @@ public static class MigrateAndSeed
             Description = "PC platform release of the 2004 wonder",
         });
         context.SaveChanges();
+    }
+
+    private static async void AddRoles(DataContext context)
+    {
+        var roles = context.Set<RoleManager<Role>>();
+        if(roles.Any())
+        {
+            return;
+        }
+
     }
 }
