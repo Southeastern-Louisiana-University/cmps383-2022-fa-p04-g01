@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using FA22.P04.Web.Features.Authorization;
+using FA22.P04.Web.Features.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using FA22.P04.Web.Data;
 
