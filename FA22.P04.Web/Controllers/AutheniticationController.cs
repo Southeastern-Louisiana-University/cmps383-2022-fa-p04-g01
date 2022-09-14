@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using FA22.P04.Web.Features.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using FA22.P04.Web.Data;
 
 namespace FA22.P04.Web.Controllers; 
 {
@@ -17,7 +18,7 @@ namespace FA22.P04.Web.Controllers;
             this.userManager = userManager;
             this.signInManager = signInManager;
         }
-        private Task<User> GetCurrentUserAsync() => userManager.GetUserAsync(HttpContext.User);
+        private Task<User> GetCurrentUserAsync() => userManager.GetUserAsync(DataContext.User);
 
         //Login Endpoint
         [HttpPost]
