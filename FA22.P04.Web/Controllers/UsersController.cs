@@ -13,12 +13,12 @@ namespace FA22.P04.Web.Controllers;
     public async Task<ActionResult> Create(UserDto dto)
     {
         var user = new User { UserName = dto.UserName };
-        var result = await userManager.CreateAsync(user, dto.Password);
+        var result = await UserManager.CreateAsync(user, dto.Password);
         if (!result.Succeeded)
         {
             return BadRequest();
         }
-        await userManager.AddToRoleAsync(user, "User");
+        await UserManager.AddToRoleAsync(user, "User");
         return Ok();
     }
 }
