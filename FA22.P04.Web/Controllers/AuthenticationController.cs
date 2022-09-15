@@ -3,22 +3,27 @@ using Microsoft.AspNetCore.Identity;
 using FA22.P04.Web.Features.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using FA22.P04.Web.Data;
+using FA22.P04.Web.Features.Authorization;
 
-namespace FA22.P04.Web.Controllers; 
+namespace FA22.P04.Web.Controllers;
+
+[Route("[api/authentication]")]
+[ApiController]
+public class AuthenticationController : ControllerBase
 {
-    [Route("[api/authentication]")]
-    [ApiController]
-    public class AuthenticationController : ControllerBase
-    {
-        private readonly UserManager<User> userManager;
-        private readonly SignInManager<User> signInManager;
+    private readonly UserManager<User> userManager;
+    private readonly SignInManager<User> signInManager;
 
-        public AuthenticationController(UserManager<User> userManager, SignInManager<User> signInManager)
-        {
-            this.userManager = userManager;
-            this.signInManager = signInManager;
-        }
-        private Task<User> GetCurrentUserAsync() => userManager.GetUserAsync(DataContext.User);
+    public AuthenticationController(UserManager<User> userManager, SignInManager<User> signInManager)
+    {
+        this.userManager = userManager;
+        this.signInManager = signInManager;
+    }
+    private Task<User> GetCurrentUserAsync() {
+
+        userManager.GetUserAsync(User);
+            
+    }
 
         //Login Endpoint
         [HttpPost("login")]
@@ -36,12 +41,12 @@ namespace FA22.P04.Web.Controllers;
                 return BadRequest();
             }
             await signInManager.SignInAsync(user, false, "Password");
-            var role = await userManager.GetRolesAsync(user);
+            var roles = await userManager.GetRolesAsync(user);
 
             return Ok(new UserDto
             {
                 UserName = user.UserName,
-                Roles = role
+                Role = roles,
             });
         }
 
@@ -53,6 +58,6 @@ namespace FA22.P04.Web.Controllers;
            await signInManager.SignOutAsync();
            return Ok();
         }
-    }
 }
+
 
