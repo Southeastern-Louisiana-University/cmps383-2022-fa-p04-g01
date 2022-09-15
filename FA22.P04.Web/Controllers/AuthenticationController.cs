@@ -6,7 +6,7 @@ using FA22.P04.Web.Data;
 
 namespace FA22.P04.Web.Controllers; 
 {
-    [Route("[api/AuthenticationController]")]
+    [Route("[api/authentication]")]
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
@@ -21,7 +21,7 @@ namespace FA22.P04.Web.Controllers;
         private Task<User> GetCurrentUserAsync() => userManager.GetUserAsync(DataContext.User);
 
         //Login Endpoint
-        [HttpPost]
+        [HttpPost("login")]
         public async Task<ActionResult> LoginAsync(LoginDto dto)
         {
             var user = await userManager.FindByNameAsync(dto.UserName);
@@ -46,7 +46,8 @@ namespace FA22.P04.Web.Controllers;
         }
 
         //Logout Endpoint
-        [HttpPost]
+        [HttpPost("logout")]
+        [Authorize]
         public async Task<ActionResult> Logout()
         {
            await signInManager.SignOutAsync();
